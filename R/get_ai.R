@@ -25,48 +25,51 @@ get_ai <- function(ai             = NULL,
       deltaw <- open_delta()
 
 
-      # Query to get alternative AI names and IDs
-      query_alt_names   <- "SELECT
-                              tempo.agency_interest_alt.*,
-                              tempo_mn_util.program_user_group_xref.program_code
-                            FROM
-                              tempo.agency_interest_alt
-                              INNER JOIN
-                                tempo_mn_util.program_user_group_xref ON
-                                tempo_mn_util.program_user_group_xref.user_group_id =
-                                tempo.agency_interest_alt.user_group_id
-                            WHERE
-                              int_doc_id = 0 AND
-                              end_date IS NULL"
+      if(keep_alt_names) {
 
-      # Add AI filter
-      if (!is.null(ai)) {
+        # Query to get alternative AI names and IDs
+        query_alt_names   <- "SELECT
+                                tempo.agency_interest_alt.*,
+                                tempo_mn_util.program_user_group_xref.program_code
+                              FROM
+                                tempo.agency_interest_alt
+                                INNER JOIN
+                                  tempo_mn_util.program_user_group_xref ON
+                                  tempo_mn_util.program_user_group_xref.user_group_id =
+                                  tempo.agency_interest_alt.user_group_id
+                              WHERE
+                                int_doc_id = 0 AND
+                                end_date IS NULL"
 
-        ai <- as.numeric(ai)
+        # Add AI filter
+        if (!is.null(ai)) {
 
-        ai <- ai[!is.na(ai)]
+          ai <- as.numeric(ai)
 
-        if (length(ai) > 0) {
+          ai <- ai[!is.na(ai)]
 
-          ai_filter <- paste0("IN (", paste(paste0("'", as.numeric(ai), "'"), collapse = ", "), ")")
+          if (length(ai) > 0) {
 
-          query_alt_names <- paste(query_alt_names, "AND (master_ai_id", ai_filter) %>%
-                             paste("OR alternate_ai_id", ai_filter, ")")
+            ai_filter <- paste0("IN (", paste(paste0("'", as.numeric(ai), "'"), collapse = ", "), ")")
+
+            query_alt_names <- paste(query_alt_names, "AND (master_ai_id", ai_filter) %>%
+                               paste("OR alternate_ai_id", ai_filter, ")")
+          }
         }
-      }
 
-      # Run query
-      alt_names <- RODBC::sqlQuery(deltaw, query_alt_names, max = 180000)
+        # Run query
+        alt_names <- RODBC::sqlQuery(deltaw, query_alt_names, max = 180000)
 
-      # Drop columns
-      alt_names <- dplyr::select(alt_names, -c(TMSP_CREATED, USER_CREATED, TMSP_LAST_UPDT, USER_LAST_UPDT))
+        # Drop columns
+        alt_names <- dplyr::select(alt_names, -c(TMSP_CREATED, USER_CREATED, TMSP_LAST_UPDT, USER_LAST_UPDT))
 
 
-      # Rename start/end date columns
-      alt_names <- dplyr::rename(alt_names,
-                                 START_DATE_ALT = START_DATE,
-                                 END_DATE_ALT   = END_DATE)
+        # Rename start/end date columns
+        alt_names <- dplyr::rename(alt_names,
+                                   START_DATE_ALT = START_DATE,
+                                   END_DATE_ALT   = END_DATE)
 
+        }
 
       # Query to get AI names
       query_ai_names <- "SELECT *
@@ -76,7 +79,20 @@ get_ai <- function(ai             = NULL,
                             int_doc_id = 0"
 
       # Add AI filter
-      if (!is.null(ai)) {
+      if (!is.null(ai) & !keep_alt_names) {
+
+         ai <- as.numeric(ai)
+
+         ai <- ai[!is.na(ai)]
+
+         if (length(ai) > 0) {
+
+            ai_filter <- paste0("IN (", paste(paste0("'", as.numeric(ai), "'"), collapse = ", "), ")")
+
+            query_ai_names <- paste(query_ai_names, "AND master_ai_id", ai_filter)
+          }
+
+      } else if (!is.null(ai)) {
 
         ai_filter <- paste0("IN (", paste(paste0("'", alt_names$MASTER_AI_ID, "'"), collapse = ", "), ")")
 
@@ -107,6 +123,7 @@ get_ai <- function(ai             = NULL,
 
         return(ai_names)
 }
+
 
 #' @rdname get_ai
 #' @examples get_ai_names(ai = c(4558, 12, 549, 1:5), keep_alt_names = TRUE, tempo_test = FALSE)

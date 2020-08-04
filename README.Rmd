@@ -10,15 +10,18 @@ Version: 0.0.0.9000
 :electric_plug: :floppy_disk: R connections to MPCA's databases: DELTA, TEMPO, EQUIS, RAPIDS.
 
 
+## Functions
+
 * `open_delta` : Open a connection to the oracle database _DELTAW_, which houses TEMPO, EQUIS, RAPIDS, ONBASE.
 * `get_ai` : Get all Agency Interest (AI) names from TEMPO.
 
-
-
+```{r, include=F}
+library(knitr)
+```
 
 ## Install
 
-To install `mpcadb` from github:
+Install `mpcadb` from GitHub:
 
 ```{r, eval=F}
 # First install the 'devtools' package
@@ -26,33 +29,49 @@ library(devtools)
 
 # Install the development pkg from GitHub
 remotes::install_github("MPCA-data/mpcadb")
-
 ```
 -----
 
 
 ## Use
 
-You can load the shapefiles into your workspace by entering their names in the console after loading the package.
+Open an RODBC connection to DELTA with the `open_delta()` function. It will add the credentials for you.
 
-```{r, eval=F}
-library(mpcaej)
+```{r}
+library(mpcadb)
 
-# Census Tract information
-ej <- ej_shapes
-
-# Tribal area polygons
-tribes <- tribe_shapes
+# Open DELTA connection and set to `deltaw`
+deltaw <- open_delta()
 
 ```
 
+<br>
 
 
-## Leaflet map of shapes
-```{r, eval=F}
-map_ej()
+## TEMPO AI's
 
+Get a complete list of the Agency Interests from TEMPO with `get_ai()`.
+
+```{r}
+ai_names <- get_ai(keep_alt_names = TRUE)
+
+kable(head(ai_names, 4))
 ```
 
 
-![](ej_map_pop.png)
+<br>
+
+
+Or get only a select list of TEMPO AI's.
+```{r}
+ai_names <- get_ai(ai = c(441, 288), keep_alt_names = FALSE)
+
+kable(head(ai_names))
+```
+
+
+<br>
+
+## EQUIS examples...
+
+<br>

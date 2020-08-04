@@ -1,0 +1,58 @@
+---
+output:
+    github_document
+R-Package: mpcadb
+Version: 0.0.0.9000
+---
+
+# mpcadb
+
+:electric_plug: :floppy_disk: R connections to MPCA's databases: DELTA, TEMPO, EQUIS, RAPIDS.
+
+
+* `open_delta` : Open a connection to the oracle database _DELTAW_, which houses TEMPO, EQUIS, RAPIDS, ONBASE.
+* `get_ai` : Get all Agency Interest (AI) names from TEMPO.
+
+
+
+
+## Install
+
+To install `mpcadb` from github:
+
+```{r, eval=F}
+# First install the 'devtools' package
+library(devtools)
+
+# Install the development pkg from GitHub
+remotes::install_github("MPCA-data/mpcadb")
+
+```
+-----
+
+
+## Use
+
+You can load the shapefiles into your workspace by entering their names in the console after loading the package.
+
+```{r, eval=F}
+library(mpcaej)
+
+# Census Tract information
+ej <- ej_shapes
+
+# Tribal area polygons
+tribes <- tribe_shapes
+
+```
+
+
+
+## Leaflet map of shapes
+```{r, eval=F}
+map_ej()
+
+```
+
+
+![](ej_map_pop.png)

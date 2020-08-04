@@ -9,7 +9,7 @@
 #' get_creds()
 #' }
 #'
-#'
+#' @export
 
 get_creds <- function() {
 

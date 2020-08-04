@@ -3,6 +3,7 @@
 export("%>%")
 export(get_ai)
 export(get_ai_names)
+export(get_creds)
 export(get_equis_monitors)
 export(open_delta)
 importFrom(magrittr,"%>%")

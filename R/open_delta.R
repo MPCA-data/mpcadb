@@ -57,6 +57,10 @@ open_delta <- function(delta_dsn = NULL) {
           message("Connection successful!")
 
           return(deltaw)
+
+        } else {
+
+          return(deltaw)
       }
     }
 }

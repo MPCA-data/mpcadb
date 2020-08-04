@@ -22,7 +22,7 @@ get_ai <- function(ai             = NULL,
                    tempo_test     = FALSE
                    ) {
 
-      deltaw <- con_delta()
+      deltaw <- open_delta()
 
 
       # Query to get alternative AI names and IDs

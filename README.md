@@ -1,13 +1,13 @@
 
 # mpcadb
 
-:electric\_plug: :floppy\_disk: R connections to MPCA’s databases:
-DELTA, TEMPO, EQUIS, RAPIDS.
+:electric\_plug: :floppy\_disk: Easy R connections to MPCA’s databases:
+DELTA, TEMPO, EQUIS, RAPIDS, ONBASE.
 
 ## Functions
 
-  - `open_delta` : Open a connection to the oracle database *DELTAW*,
-    which houses TEMPO, EQUIS, RAPIDS, ONBASE.
+  - `open_delta` : Open a connection to *DELTAW*, MPCA’s oracle database
+    that houses TEMPO, EQUIS, RAPIDS, ONBASE and more.
   - `get_ai` : Get all Agency Interest (AI) names from TEMPO.
 
 ## Install
@@ -42,7 +42,7 @@ deltaw <- open_delta()
 
 ## TEMPO AI’s
 
-Get a complete list of the Agency Interests from TEMPO with `get_ai()`.
+Get a complete list of the Agency Interests from TEMPO with `get_ai()`:
 
 ``` r
 ai_names <- get_ai(keep_alt_names = TRUE)
@@ -59,12 +59,12 @@ kable(head(ai_names, 4))
 
 <br>
 
-Or get only a select list of TEMPO AI’s.
+Get only a select list of TEMPO AI’s:
 
 ``` r
 ai_names <- get_ai(ai = c(441, 288), keep_alt_names = FALSE)
 
-kable(head(ai_names))
+kable(ai_names)
 ```
 
 | MASTER\_AI\_ID | INT\_DOC\_ID | MASTER\_AI\_NAME        | AI\_TYPE\_CODE | START\_DATE         | END\_DATE |

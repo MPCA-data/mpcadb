@@ -26,6 +26,8 @@ remotes::install_github("MPCA-data/mpcadb")
 
 ## Use
 
+:warning: **You need to set RStudio to open the 32-bit version of R to connect to _delta_.**
+
 Open an RODBC connection to DELTA with the `open_delta()` function. It
 will add the credentials for you.
 
